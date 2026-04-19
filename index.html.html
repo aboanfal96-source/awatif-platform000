@@ -2733,36 +2733,47 @@ function renderFilesPage(el){
   document.head.appendChild(s);
 })();
 
-// ═══ VISITOR COUNTER (REAL) ═══
-// Uses CountAPI-compatible free service for real cross-device counting
+// ═══ عداد الزيارات الدقيق والمحدث ═══
 var visitorCount = 0;
 
-function updateVisitorDisplay(){
-  var el = document.getElementById('totalVisits');
-  if(el) el.textContent = visitorCount > 0 ? visitorCount.toLocaleString('ar-SA') : '...';
+function updateVisitorDisplay() {
+    var el = document.getElementById('totalVisits');
+    if (el) {
+        // عرض الرقم بتنسيق عربي جميل
+        el.textContent = visitorCount > 0 ? visitorCount.toLocaleString('ar-SA') : '...';
+    }
 }
 
-// Fetch and increment real counter via free API
-(function initRealCounter(){
-  // Use a namespace unique to this site
-  var ns = 'math-platform64-vercel';
-  var key = 'visits';
-  
-  // Try primary API
-  fetch('https://api.countapi.xyz/hit/' + ns + '/' + key)
-    .then(function(r){ return r.json(); })
-    .then(function(data){ 
-      if(data && data.value){ visitorCount = data.value; updateVisitorDisplay(); }
-    })
-    .catch(function(){
-      // Fallback: use localStorage count but mark it as local
-      try {
-        var lc = parseInt(localStorage.getItem('math_visit_count') || '0') + 1;
-        localStorage.setItem('math_visit_count', lc.toString());
-        visitorCount = lc;
-        updateVisitorDisplay();
-      } catch(e){}
-    });
+// دالة لجلب وتحديث العداد فور تحميل الصفحة
+(function initVisitorCounter() {
+    // نستخدم مفتاحاً فريداً لمنصتك
+    const namespace = "awatif-math-platform";
+    const key = "page-views";
+    const apiUrl = `https://api.countapi.xyz/hit/${namespace}/${key}`;
+
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) throw new Error('API Error');
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.value) {
+                visitorCount = data.value;
+                updateVisitorDisplay();
+            }
+        })
+        .catch(error => {
+            console.warn("فشل الاتصال بالعداد العالمي، سيتم استخدام العداد المحلي:");
+            // حل احتياطي في حال تعطل الخدمة الخارجية (العد محلياً في المتصفح)
+            try {
+                let localCount = parseInt(localStorage.getItem('local_visit_count') || '0') + 1;
+                localStorage.setItem('local_visit_count', localCount.toString());
+                visitorCount = localCount;
+                updateVisitorDisplay();
+            } catch (e) {
+                console.error("خطأ في التخزين المحلي:", e);
+            }
+        });
 })();
 
 (function addVisitorCSS(){
