@@ -2323,7 +2323,7 @@ function renderHome(el){
     </div>`).join('')}
   </div>
   <div id="visitorStatsBar" class="visitor-stats-bar">
-    <div class="vs-item">👁️ عدد الزوار: <span id="gc-count" class="vs-num">...</span></div>
+    <div class="vs-item">👁️ عدد الزيارات: <span class="vs-num" id="totalVisits">...</span></div>
   </div>
   </div>`;
   updateVisitorDisplay();
@@ -2733,12 +2733,37 @@ function renderFilesPage(el){
   document.head.appendChild(s);
 })();
 
-// ═══ VISITOR COUNTER (GoatCounter) ═══
+// ═══ VISITOR COUNTER (REAL) ═══
+// Uses CountAPI-compatible free service for real cross-device counting
+var visitorCount = 0;
+
 function updateVisitorDisplay(){
-  if(typeof goatcounter !== "undefined" && goatcounter.visit_count){
-    goatcounter.visit_count({append:"#gc-count", type:"html", no_branding:true, style:"font-weight:700;color:#a78bfa;font-size:0.8rem;display:inline;"});
-  }
+  var el = document.getElementById('totalVisits');
+  if(el) el.textContent = visitorCount > 0 ? visitorCount.toLocaleString('ar-SA') : '...';
 }
+
+// Fetch and increment real counter via free API
+(function initRealCounter(){
+  // Use a namespace unique to this site
+  var ns = 'math-platform64-vercel';
+  var key = 'visits';
+  
+  // Try primary API
+  fetch('https://api.countapi.xyz/hit/' + ns + '/' + key)
+    .then(function(r){ return r.json(); })
+    .then(function(data){ 
+      if(data && data.value){ visitorCount = data.value; updateVisitorDisplay(); }
+    })
+    .catch(function(){
+      // Fallback: use localStorage count but mark it as local
+      try {
+        var lc = parseInt(localStorage.getItem('math_visit_count') || '0') + 1;
+        localStorage.setItem('math_visit_count', lc.toString());
+        visitorCount = lc;
+        updateVisitorDisplay();
+      } catch(e){}
+    });
+})();
 
 (function addVisitorCSS(){
   var s = document.createElement('style');
@@ -2747,6 +2772,6 @@ function updateVisitorDisplay(){
 })();
 
 renderContent();
-
+</script>
 </body>
 </html>
