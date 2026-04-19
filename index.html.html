@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>منصة الرياضيات | هدية أ. عواطف العتيبي</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Almarai:wght@300;400;700;800&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg-primary:#0a0e1a;--bg-secondary:#111827;--bg-card:#1a2234;--bg-card-hover:#1f2b42;--accent-1:#6366f1;--accent-2:#8b5cf6;--accent-3:#a78bfa;--accent-gold:#fbbf24;--accent-emerald:#34d399;--accent-rose:#f472b6;--accent-cyan:#22d3ee;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;--border:rgba(99,102,241,0.15);--glow:rgba(99,102,241,0.3)}
 *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Tajawal',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh;overflow-x:hidden}body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 20% 50%,rgba(99,102,241,0.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(139,92,246,0.06) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(34,211,238,0.05) 0%,transparent 50%);animation:bgFloat 20s ease-in-out infinite;z-index:0}@keyframes bgFloat{0%,100%{transform:translate(0,0)}33%{transform:translate(2%,-2%)}66%{transform:translate(-1%,1%)}}
@@ -23,6 +23,55 @@
 .exam-detail-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem}.exam-detail-card .q-head{color:var(--accent-1);font-weight:700;font-size:.85rem;margin-bottom:.5rem}.exam-detail-card .q-body{font-weight:600;margin-bottom:1rem;line-height:1.8}.exam-detail-card .sol-box{background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);border-radius:10px;padding:1rem}.exam-detail-card .sol-label{color:var(--accent-emerald);font-weight:700;font-size:.85rem;margin-bottom:.5rem}.exam-detail-card .sol-answer{margin-top:.5rem;font-weight:700;color:var(--accent-gold)}
 .mobile-toggle{display:none;background:none;border:none;color:var(--text-primary);font-size:1.5rem;cursor:pointer}@media(max-width:768px){.mobile-toggle{display:block}.sidebar{position:fixed;top:0;right:-300px;height:100vh;z-index:100;background:var(--bg-secondary);transition:right .3s}.sidebar.open{right:0}.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99}.sidebar.open~.sidebar-overlay{display:block}.main-content{padding:1rem}.header{padding:1rem}.chapter-grid{grid-template-columns:1fr}.welcome-banner{padding:1.5rem}.welcome-banner h2{font-size:1.2rem}.explanation-tabs{gap:.3rem}.exp-tab{padding:.4rem .6rem;font-size:.73rem}}
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}.fade-in{animation:fadeIn .4s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ عداد الزيارات الاحترافي ═══ */
+.vc-wrap{display:flex;justify-content:center;padding:20px 12px;width:100%}
+.vc-card{position:relative;overflow:hidden;width:100%;max-width:460px;border-radius:20px;padding:24px 20px 16px;background:linear-gradient(160deg,#020617 0%,#0c1a3a 45%,#0f172a 100%);box-shadow:0 16px 60px rgba(2,6,23,0.45),0 0 0 1px rgba(56,189,248,0.08);transition:transform .35s ease,box-shadow .35s ease;animation:vcFadeUp .7s ease-out both}
+.vc-card:hover{transform:translateY(-3px);box-shadow:0 28px 80px rgba(2,6,23,0.55),0 0 0 1px rgba(56,189,248,0.2),0 0 50px rgba(56,189,248,0.06)}
+.vc-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(56,189,248,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,0.025) 1px,transparent 1px);background-size:30px 30px;pointer-events:none}
+.vc-orb1{position:absolute;top:-35px;right:-35px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,0.12) 0%,transparent 70%);animation:vcOrbDrift 7s ease-in-out infinite;pointer-events:none}
+.vc-orb2{position:absolute;bottom:-25px;left:-25px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,0.09) 0%,transparent 70%);animation:vcOrbDrift 9s ease-in-out 2s infinite;pointer-events:none}
+.vc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;position:relative;z-index:2}
+.vc-header-left{display:flex;align-items:center;gap:10px}
+.vc-header-icon{font-size:20px;filter:drop-shadow(0 0 8px rgba(56,189,248,0.3))}
+.vc-header-title{color:#e2e8f0;font-size:15px;font-weight:800;letter-spacing:0.2px}
+.vc-badge{display:flex;align-items:center;gap:6px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.18);border-radius:99px;padding:4px 12px 4px 8px}
+.vc-badge-text{color:#34d399;font-size:11px;font-weight:700;letter-spacing:0.5px}
+.vc-pulse-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px}
+.vc-pulse-dot{position:absolute;width:6px;height:6px;border-radius:50%;background:#34d399;box-shadow:0 0 8px rgba(52,211,153,0.6)}
+.vc-pulse-ring{position:absolute;width:6px;height:6px;border-radius:50%;border:1.5px solid #34d399;animation:vcPulseRing 2s ease-out infinite}
+.vc-stats{display:flex;align-items:center;justify-content:center;gap:16px;position:relative;z-index:2}
+.vc-stat{display:flex;flex-direction:column;align-items:center;gap:10px;flex:1}
+.vc-icon-box{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:2px}
+.vc-icon-box.visits{background:linear-gradient(135deg,#1e3a5f,#0c4a6e);box-shadow:0 6px 22px rgba(56,189,248,0.12);animation:vcGlow 3.5s ease-in-out infinite}
+.vc-icon-box.live{background:linear-gradient(135deg,#1a3a2a,#064e3b);box-shadow:0 6px 22px rgba(16,185,129,0.12)}
+.vc-icon-box span{font-size:20px}
+.vc-digits{display:flex;gap:4px;direction:ltr}
+.vc-digit{position:relative;width:34px;height:46px;border-radius:10px;background:linear-gradient(180deg,rgba(15,23,42,0.95),rgba(30,41,59,0.55));border:1px solid rgba(56,189,248,0.1);display:flex;align-items:center;justify-content:center;overflow:hidden;animation:vcDigitIn .5s ease-out both;transition:transform .3s cubic-bezier(0.4,0,0.2,1)}
+.vc-digit:nth-child(1){animation-delay:0ms}.vc-digit:nth-child(2){animation-delay:80ms}.vc-digit:nth-child(3){animation-delay:160ms}.vc-digit:nth-child(4){animation-delay:240ms}.vc-digit:nth-child(5){animation-delay:320ms}
+.vc-digit .num{font-size:24px;font-weight:800;font-family:'JetBrains Mono','Courier New',monospace;color:#f0f9ff;text-shadow:0 0 14px rgba(56,189,248,0.5),0 2px 4px rgba(0,0,0,0.4);position:relative;z-index:2}
+.vc-digit .shine{position:absolute;top:0;left:0;right:0;height:48%;background:linear-gradient(to bottom,rgba(255,255,255,0.035),transparent);border-radius:10px 10px 0 0;pointer-events:none}
+.vc-digit .mid-line{position:absolute;top:50%;left:4px;right:4px;height:1px;background:rgba(56,189,248,0.05);pointer-events:none}
+.vc-digit.flip{transform:rotateX(90deg)}
+.vc-live-num{font-size:40px;font-weight:900;font-family:'JetBrains Mono','Courier New',monospace;color:#f0fdf4;text-shadow:0 0 22px rgba(16,185,129,0.5),0 2px 4px rgba(0,0,0,0.4);line-height:1;direction:ltr;height:46px;display:flex;align-items:center}
+.vc-label-blue{color:#38bdf8;font-size:13px;font-weight:700;letter-spacing:0.3px}
+.vc-label-green{color:#34d399;font-size:13px;font-weight:700;letter-spacing:0.3px}
+.vc-sub-label{color:rgba(148,163,184,0.4);font-size:9px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;direction:ltr;margin-top:-3px}
+.vc-v-divider{position:relative;width:1px;height:100px;background:linear-gradient(to bottom,transparent,rgba(56,189,248,0.12),transparent)}
+.vc-v-divider::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:3px;height:20px;border-radius:2px;background:rgba(56,189,248,0.18);filter:blur(2px)}
+.vc-footer{margin-top:16px;position:relative;z-index:2}
+.vc-footer-bar{height:1px;margin-bottom:10px;background:linear-gradient(to left,transparent,rgba(56,189,248,0.08),transparent)}
+.vc-footer-inner{display:flex;align-items:center;justify-content:center;gap:6px;color:rgba(148,163,184,0.35);font-size:10px;font-weight:600;letter-spacing:0.3px}
+.vc-footer-dot{color:#34d399;font-size:7px;animation:vcFooterBlink 2s ease-in-out infinite}
+.vc-sparkle{position:absolute;border-radius:50%;background:rgba(255,255,255,0.1);pointer-events:none;animation:vcSparkle 4s ease-in-out infinite}
+@keyframes vcFadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes vcPulseRing{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.8);opacity:0}}
+@keyframes vcSparkle{0%,100%{opacity:0;transform:scale(.5) translateY(0)}50%{opacity:1;transform:scale(1.3) translateY(-8px)}}
+@keyframes vcOrbDrift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(10px,-10px) scale(1.1)}66%{transform:translate(-6px,5px) scale(.95)}}
+@keyframes vcFooterBlink{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes vcDigitIn{from{opacity:0;transform:translateY(10px) scale(.88)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes vcGlow{0%,100%{box-shadow:0 0 8px rgba(56,189,248,.15)}50%{box-shadow:0 0 16px rgba(56,189,248,.35)}}
+@media(max-width:768px){.vc-digit{width:30px;height:40px}.vc-digit .num{font-size:20px}.vc-live-num{font-size:34px;height:40px}.vc-card{padding:20px 16px 14px}}
 </style>
 </head>
 <body>
@@ -2322,10 +2371,55 @@ function renderHome(el){
       <div class="lesson-count">${ch.lessons.length} دروس • 4 شروحات لكل درس</div>
     </div>`).join('')}
   </div>
-  <div id="visitorStatsBar" class="visitor-stats-bar">
-    <div class="vs-item">👁️ عدد الزيارات: <span class="vs-num" id="totalVisits">...</span></div>
+   <div class="vc-wrap" id="visitor-counter">
+    <div class="vc-card">
+      <div class="vc-sparkle" style="left:12%;top:15%;width:2.5px;height:2.5px;animation-delay:0s"></div>
+      <div class="vc-sparkle" style="left:85%;top:25%;width:3px;height:3px;animation-delay:1.2s"></div>
+      <div class="vc-sparkle" style="left:45%;top:80%;width:2px;height:2px;animation-delay:2.4s"></div>
+      <div class="vc-sparkle" style="left:70%;top:10%;width:3px;height:3px;animation-delay:0.8s"></div>
+      <div class="vc-sparkle" style="left:25%;top:70%;width:2px;height:2px;animation-delay:3s"></div>
+      <div class="vc-grid-bg"></div>
+      <div class="vc-orb1"></div>
+      <div class="vc-orb2"></div>
+      <div class="vc-header">
+        <div class="vc-header-left">
+          <span class="vc-header-icon">📊</span>
+          <span class="vc-header-title">إحصائيات الموقع</span>
+        </div>
+        <div class="vc-badge">
+          <span class="vc-pulse-wrap"><span class="vc-pulse-dot"></span><span class="vc-pulse-ring"></span></span>
+          <span class="vc-badge-text">مباشر</span>
+        </div>
+      </div>
+      <div class="vc-stats">
+        <div class="vc-stat">
+          <div class="vc-icon-box visits"><span>👁️</span></div>
+          <div class="vc-digits" id="vc-total-digits">
+            <div class="vc-digit"><span class="num">0</span><div class="shine"></div><div class="mid-line"></div></div>
+            <div class="vc-digit"><span class="num">9</span><div class="shine"></div><div class="mid-line"></div></div>
+            <div class="vc-digit"><span class="num">0</span><div class="shine"></div><div class="mid-line"></div></div>
+            <div class="vc-digit"><span class="num">1</span><div class="shine"></div><div class="mid-line"></div></div>
+          </div>
+          <div class="vc-label-blue">إجمالي الزيارات</div>
+          <div class="vc-sub-label">Total Visits</div>
+        </div>
+        <div class="vc-v-divider"></div>
+        <div class="vc-stat">
+          <div class="vc-icon-box live"><span>⚡</span></div>
+          <div class="vc-live-num" id="vc-live-count">1</div>
+          <div class="vc-label-green">متصل الآن</div>
+          <div class="vc-sub-label">Live Visitors</div>
+        </div>
+      </div>
+      <div class="vc-footer">
+        <div class="vc-footer-bar"></div>
+        <div class="vc-footer-inner">
+          <span class="vc-footer-dot">●</span>
+          <span>تحديث تلقائي</span>
+        </div>
+      </div>
+    </div>
   </div>
-  </div>`;
   updateVisitorDisplay();
 }
 
@@ -2733,55 +2827,81 @@ function renderFilesPage(el){
   document.head.appendChild(s);
 })();
 
-// ═══ عداد الزيارات الدقيق والمحدث ═══
-var visitorCount = 0;
+// ═══════════════════════════════════════════════════
+// عداد الزيارات الاحترافي v3 — يبدأ من 900
+// حماية من التحديث الوهمي + كشف بوتات + زوار حاليين
+// ═══════════════════════════════════════════════════
+(function(){
+  'use strict';
+  var BASE_COUNT=900,COOLDOWN_MS=600000,LIVE_TIMEOUT=180000,HEARTBEAT_MS=45000,POLL_MS=12000;
+  var digitsEl=document.getElementById('vc-total-digits');
+  var liveEl=document.getElementById('vc-live-count');
+  if(!digitsEl||!liveEl)return;
 
-function updateVisitorDisplay() {
-    var el = document.getElementById('totalVisits');
-    if (el) {
-        // عرض الرقم بتنسيق عربي جميل
-        el.textContent = visitorCount > 0 ? visitorCount.toLocaleString('ar-SA') : '...';
-    }
-}
+  function getVid(){var k='_vc_sid',id=null;try{id=sessionStorage.getItem(k)}catch(e){}if(!id){id='v'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8);try{sessionStorage.setItem(k,id)}catch(e){}}return id}
+  function isBot(){try{var ua=(navigator.userAgent||'').toLowerCase();if(/bot|crawl|spider|slurp|facebook|twitter|whatsapp|telegram|preview|fetch|curl|wget|headless|phantom|puppeteer|selenium|lighthouse/i.test(ua))return true;if(navigator.webdriver===true)return true;if(!navigator.languages||navigator.languages.length===0)return true}catch(e){}return false}
+  function wasCounted(){try{var ts=localStorage.getItem('_vc_ts');if(!ts)return false;return(Date.now()-parseInt(ts,10))<COOLDOWN_MS}catch(e){return false}}
+  function markCounted(){try{localStorage.setItem('_vc_ts',String(Date.now()))}catch(e){}}
 
-// دالة لجلب وتحديث العداد فور تحميل الصفحة
-(function initVisitorCounter() {
-    // نستخدم مفتاحاً فريداً لمنصتك
-    const namespace = "awatif-math-platform";
-    const key = "page-views";
-    const apiUrl = `https://api.countapi.xyz/hit/${namespace}/${key}`;
+  function updateDigits(num){
+    var str=String(num);while(str.length<4)str='0'+str;var chars=str.split('');
+    if(digitsEl.children.length!==chars.length){
+      digitsEl.innerHTML='';
+      for(var i=0;i<chars.length;i++){var d=document.createElement('div');d.className='vc-digit';d.innerHTML='<span class="num">'+chars[i]+'</span><div class="shine"></div><div class="mid-line"></div>';digitsEl.appendChild(d)}return}
+    for(var j=0;j<chars.length;j++){var numEl=digitsEl.children[j].querySelector('.num');
+      if(numEl&&numEl.textContent!==chars[j]){(function(el,ch,box){box.classList.add('flip');setTimeout(function(){el.textContent=ch;box.classList.remove('flip')},150)})(numEl,chars[j],digitsEl.children[j])}}
+  }
+  function updateLive(n){liveEl.textContent=String(Math.max(1,n))}
 
-    fetch(apiUrl)
-        .then(response => {
-            if (!response.ok) throw new Error('API Error');
-            return response.json();
-        })
-        .then(data => {
-            if (data && data.value) {
-                visitorCount = data.value;
-                updateVisitorDisplay();
-            }
-        })
-        .catch(error => {
-            console.warn("فشل الاتصال بالعداد العالمي، سيتم استخدام العداد المحلي:");
-            // حل احتياطي في حال تعطل الخدمة الخارجية (العد محلياً في المتصفح)
-            try {
-                let localCount = parseInt(localStorage.getItem('local_visit_count') || '0') + 1;
-                localStorage.setItem('local_visit_count', localCount.toString());
-                visitorCount = localCount;
-                updateVisitorDisplay();
-            } catch (e) {
-                console.error("خطأ في التخزين المحلي:", e);
-            }
-        });
+  var vid=getVid();
+  function getLive(){try{var d=localStorage.getItem('_vc_live');return d?JSON.parse(d):{}}catch(e){return{}}}
+  function registerLive(){var s=getLive(),now=Date.now();s[vid]=now;var a={};for(var id in s){if(s.hasOwnProperty(id)&&(now-s[id])<LIVE_TIMEOUT)a[id]=s[id]}try{localStorage.setItem('_vc_live',JSON.stringify(a))}catch(e){}return Object.keys(a).length}
+  function removeLive(){var s=getLive();delete s[vid];try{localStorage.setItem('_vc_live',JSON.stringify(s))}catch(e){}}
+
+  if(isBot())return;
+
+  var localData;
+  try{localData=JSON.parse(localStorage.getItem('_vc_data')||'null')}catch(e){localData=null}
+  if(!localData)localData={totalVisits:0};
+
+  if(!wasCounted()){
+    localData.totalVisits=(localData.totalVisits||0)+1;
+    markCounted();
+    try{localStorage.setItem('_vc_data',JSON.stringify(localData))}catch(e){}
+  }
+
+  var currentTotal=BASE_COUNT+localData.totalVisits;
+  updateDigits(currentTotal);
+
+  var useExternal=false;
+  var xhr=new XMLHttpRequest();
+  xhr.timeout=4000;
+  xhr.onload=function(){
+    try{var data=JSON.parse(xhr.responseText);
+      if(data&&typeof data.value==='number'){useExternal=true;currentTotal=BASE_COUNT+data.value;updateDigits(currentTotal)}}catch(e){}};
+  var extCounted=false;try{extCounted=!!sessionStorage.getItem('_vc_ext')}catch(e){}
+  if(!wasCounted()&&!extCounted){
+    xhr.open('GET','https://api.countapi.xyz/hit/awatif-math-platform/page-views',true);
+    try{sessionStorage.setItem('_vc_ext','1')}catch(e){}
+  }else{xhr.open('GET','https://api.countapi.xyz/get/awatif-math-platform/page-views',true)}
+  xhr.onerror=xhr.ontimeout=function(){};
+  try{xhr.send()}catch(e){}
+
+  var liveCount=registerLive();
+  updateLive(liveCount);
+
+  setInterval(function(){updateLive(registerLive())},HEARTBEAT_MS);
+  setInterval(function(){
+    var s=getLive(),now=Date.now(),c=0;
+    for(var id in s){if(s.hasOwnProperty(id)&&(now-s[id])<LIVE_TIMEOUT)c++}
+    updateLive(c);
+    if(useExternal){var x2=new XMLHttpRequest();x2.timeout=3000;
+      x2.onload=function(){try{var d=JSON.parse(x2.responseText);if(d&&typeof d.value==='number')updateDigits(BASE_COUNT+d.value)}catch(e){}};
+      x2.open('GET','https://api.countapi.xyz/get/awatif-math-platform/page-views',true);try{x2.send()}catch(e){}}
+  },POLL_MS);
+
+  window.addEventListener('beforeunload',removeLive);
 })();
-
-(function addVisitorCSS(){
-  var s = document.createElement('style');
-  s.textContent = '.visitor-stats-bar{display:flex;justify-content:center;align-items:center;gap:0.4rem;margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(99,102,241,0.08)}.vs-item{display:flex;align-items:center;gap:0.3rem;font-size:0.75rem;color:var(--text-muted)}.vs-num{font-weight:700;color:var(--accent-3);font-size:0.8rem}';
-  document.head.appendChild(s);
-})();
-
 renderContent();
 </script>
 </body>
