@@ -29,33 +29,24 @@
 <header class="header"><div class="header-right"><button class="mobile-toggle" onclick="toggleSidebar()">☰</button><div class="logo-icon">ر</div><div class="logo-text"><h1>منصة الرياضيات الذكية</h1><p>الصف الثالث المتوسط • طبعة 1447هـ</p></div></div><div class="header-badge">🎁 هدية من أ. عواطف العتيبي</div></header>
 <div class="app-container">
 <nav class="sidebar" id="sidebar">
-  <div class="sidebar-section">
-    <div class="sidebar-title">القائمة الرئيسية</div>
-    <div class="nav-item active" onclick="showSection('home')"><span class="icon">🏠</span> الرئيسية</div>
-  </div>
-  <div class="sidebar-section">
-    <div class="sidebar-title">الفصل الدراسي الأول</div>
+  <div class="sidebar-section"><div class="sidebar-title">القائمة الرئيسية</div><div class="nav-item active" onclick="showSection('home')"><span class="icon">🏠</span> الرئيسية</div></div>
+  <div class="sidebar-section"><div class="sidebar-title">الفصل الدراسي الأول</div>
     <div class="nav-item" onclick="showChapter(0)"><span class="icon">📐</span> المعادلات الخطية</div>
-      <div class="nav-item" onclick="showChapter(1)"><span class="icon">📊</span> الدوال الخطية</div>
-      <div class="nav-item" onclick="showChapter(2)"><span class="icon">📉</span> تحليل الدوال الخطية</div>
-      <div class="nav-item" onclick="showChapter(3)"><span class="icon">⚖️</span> المتباينات الخطية</div>
-      <div class="nav-item" onclick="showChapter(4)"><span class="icon">🔗</span> أنظمة المعادلات</div>
-  </div>
-  <div class="sidebar-section">
-    <div class="sidebar-title">الفصل الدراسي الثاني</div>
+    <div class="nav-item" onclick="showChapter(1)"><span class="icon">📊</span> الدوال الخطية</div>
+    <div class="nav-item" onclick="showChapter(2)"><span class="icon">📉</span> تحليل الدوال الخطية</div>
+    <div class="nav-item" onclick="showChapter(3)"><span class="icon">⚖️</span> المتباينات الخطية</div>
+    <div class="nav-item" onclick="showChapter(4)"><span class="icon">🔗</span> أنظمة المعادلات</div></div>
+  <div class="sidebar-section"><div class="sidebar-title">الفصل الدراسي الثاني</div>
     <div class="nav-item" onclick="showChapter(5)"><span class="icon">🔺</span> كثيرات الحدود</div>
-      <div class="nav-item" onclick="showChapter(6)"><span class="icon">🧮</span> التحليل والتربيعية</div>
-      <div class="nav-item" onclick="showChapter(7)"><span class="icon">📈</span> الدوال التربيعية</div>
-      <div class="nav-item" onclick="showChapter(8)"><span class="icon">📐</span> الجذرية والمثلثات</div>
-      <div class="nav-item" onclick="showChapter(9)"><span class="icon">📊</span> الإحصاء والاحتمال</div>
-  </div>
+    <div class="nav-item" onclick="showChapter(6)"><span class="icon">🧮</span> التحليل والتربيعية</div>
+    <div class="nav-item" onclick="showChapter(7)"><span class="icon">📈</span> الدوال التربيعية</div>
+    <div class="nav-item" onclick="showChapter(8)"><span class="icon">📐</span> الجذرية والمثلثات</div>
+    <div class="nav-item" onclick="showChapter(9)"><span class="icon">📊</span> الإحصاء والاحتمال</div></div>
   <div class="nav-divider"></div>
-  <div class="sidebar-section">
-    <div class="sidebar-title">اختبارات نافس</div>
+  <div class="sidebar-section"><div class="sidebar-title">اختبارات نافس</div>
     <div class="nav-item" onclick="showSection('nafes')"><span class="icon">🎯</span> مذاكرة نافس <span class="badge">مهم</span></div>
-    <div class="nav-item" onclick="showSection('nafes-exams')"><span class="icon">📝</span> حلول اختبارات سابقة</div>
-    <div class="nav-item" onclick="showSection('nafes-quiz')"><span class="icon">⚡</span> تدريب تفاعلي</div>
-  </div>
+    <div class="nav-item" onclick="showSection('nafes-exams')"><span class="icon">📝</span> نماذج محلولة</div>
+    <div class="nav-item" onclick="showSection('nafes-quiz')"><span class="icon">⚡</span> تدريب تفاعلي</div></div>
 </nav>
 <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 <main class="main-content" id="mainContent"></main>
@@ -2330,7 +2321,12 @@ function renderHome(el){
       <h3>${ch.name}</h3>
       <div class="lesson-count">${ch.lessons.length} دروس • 4 شروحات لكل درس</div>
     </div>`).join('')}
-  </div></div>`;
+  </div>
+  <div id="visitorStatsBar" class="visitor-stats-bar">
+    <div class="vs-item">👁️ عدد الزيارات: <span class="vs-num" id="totalVisits">...</span></div>
+  </div>
+  </div>`;
+  updateVisitorDisplay();
 }
 
 function renderChapterLessons(el){
@@ -2492,8 +2488,290 @@ function submitQuiz(){
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');}
 
-renderContent();
 
+
+// ═══════════════════════════════════════════
+// CMS v3: COMPLETE FIX
+// ═══════════════════════════════════════════
+var isAdmin = false;
+var ADMIN_PASS = 'awatef2024';
+var uploadedFiles = [];
+try { uploadedFiles = JSON.parse(localStorage.getItem('math_files') || '[]'); } catch(e){}
+
+// ── Patch getExp for custom content ──
+var _baseGetExp = getExp;
+getExp = function(ci, li, style) {
+  try { var c = localStorage.getItem('custom_' + ci + '_' + li + '_' + style); if (c) return c; } catch(e){}
+  return _baseGetExp(ci, li, style);
+};
+
+// ── Build full content with admin buttons + files ──
+function buildExpContent(ci, li, style) {
+  var html = getExp(ci, li, style);
+  
+  // Admin buttons
+  if (isAdmin) {
+    html += '<div class="cms-actions">' +
+      '<button onclick="editContent(' + ci + ',' + li + ',' + style + ')" class="cms-btn cms-edit">✏️ تعديل المحتوى</button>' +
+      '<button onclick="attachFileToLesson(' + ci + ',' + li + ')" class="cms-btn cms-attach">📎 إرفاق ملف</button>' +
+      '<button onclick="addLinkToLesson(' + ci + ',' + li + ')" class="cms-btn cms-link">🔗 إضافة رابط</button>' +
+      '</div>';
+  }
+  
+  // Lesson files (visible to ALL)
+  var lf = uploadedFiles.filter(function(f){ return f.lesson === ci + '-' + li; });
+  if (lf.length > 0) {
+    html += '<div class="lesson-files"><p class="lesson-files-title">📎 ملفات ومرفقات الدرس:</p>';
+    lf.forEach(function(f) {
+      html += '<div class="file-card">';
+      if (f.isLink) {
+        html += '<span class="file-card-icon">🔗</span>' +
+          '<div class="file-card-info"><span class="file-card-name">' + f.name + '</span></div>' +
+          '<a href="' + f.url + '" target="_blank" class="file-btn file-view">فتح ↗</a>';
+      } else {
+        html += '<span class="file-card-icon">' + (f.type && f.type.indexOf('pdf') > -1 ? '📄' : '🖼️') + '</span>' +
+          '<div class="file-card-info"><span class="file-card-name">' + f.name + '</span><span class="file-card-meta">' + Math.round((f.size||0)/1024) + ' KB</span></div>' +
+          '<button onclick="openFile(\'' + f.id + '\')" class="file-btn file-view">عرض</button>' +
+          '<button onclick="downloadFile(\'' + f.id + '\')" class="file-btn file-dl">⬇ تحميل</button>';
+      }
+      if (isAdmin) html += '<button onclick="removeFile(\'' + f.id + '\')" class="file-btn file-del">حذف</button>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+  return html;
+}
+
+// ── Patch switchTab ──
+switchTab = function(ci, li, style, btn) {
+  btn.parentElement.querySelectorAll('.exp-tab').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  var c = document.getElementById('exp-' + ci + '-' + li);
+  c.innerHTML = '<div class="ai-loading"><div class="spinner"></div><p>جاري تحضير الشرح...</p></div>';
+  setTimeout(function() { c.innerHTML = buildExpContent(ci, li, style); }, 400);
+};
+
+// ── Patch renderChapterLessons to use buildExpContent for initial render ──
+renderChapterLessons = function(el) {
+  var ch = chapters[currentChapter];
+  var ci = currentChapter;
+  var html = '<div class="fade-in"><div class="section-header"><h2>' + ch.icon + ' ' + ch.name + '</h2>' +
+    '<button class="back-btn" onclick="showSection(\'home\')">→ الرجوع</button></div>';
+  
+  ch.lessons.forEach(function(lesson, li) {
+    html += '<div class="lesson-item" id="lesson-' + li + '">' +
+      '<div class="lesson-header" onclick="toggleLesson(' + li + ')">' +
+      '<div class="right"><div class="lesson-num">' + (li+1) + '</div><div class="lesson-name">' + lesson + '</div></div>' +
+      '<span class="lesson-arrow">▼</span></div>' +
+      '<div class="lesson-body"><div class="explanation-tabs">' +
+      '<button class="exp-tab active" onclick="switchTab(' + ci + ',' + li + ',0,this)"><span class="tab-icon">🎯</span> الشرح المبسّط</button>' +
+      '<button class="exp-tab" onclick="switchTab(' + ci + ',' + li + ',1,this)"><span class="tab-icon">🧩</span> أمثلة حياتية</button>' +
+      '<button class="exp-tab" onclick="switchTab(' + ci + ',' + li + ',2,this)"><span class="tab-icon">⚡</span> شرح سريع</button>' +
+      '<button class="exp-tab" onclick="switchTab(' + ci + ',' + li + ',3,this)"><span class="tab-icon">📖</span> شرح تفصيلي</button></div>' +
+      '<div class="explanation-content" id="exp-' + ci + '-' + li + '">' +
+      buildExpContent(ci, li, 0) +
+      '</div></div></div>';
+  });
+  
+  html += '</div>';
+  el.innerHTML = html;
+};
+
+// ── Patch renderContent ──
+var _baseRenderContent = renderContent;
+renderContent = function() {
+  var m = document.getElementById('mainContent');
+  m.scrollTop = 0;
+  if (currentView === 'files') { renderFilesPage(m); return; }
+  _baseRenderContent();
+  updateAdminBadge();
+};
+
+function updateAdminBadge() {
+  var b = document.querySelector('.header-badge');
+  if (!b) return;
+  if (isAdmin) { b.innerHTML='👩‍🏫 وضع المعلمة مفعّل'; b.style.cssText='border:1px solid rgba(52,211,153,0.3);color:#34d399;background:linear-gradient(135deg,rgba(52,211,153,0.15),rgba(52,211,153,0.05));padding:0.4rem 1rem;border-radius:100px;font-size:0.8rem;'; }
+  else { b.innerHTML='🎁 هدية من أ. عواطف العتيبي'; b.style.cssText='border:1px solid rgba(251,191,36,0.3);color:#fbbf24;background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(251,191,36,0.05));padding:0.4rem 1rem;border-radius:100px;font-size:0.8rem;'; }
+}
+
+// ── Patch showSection ──
+var _baseShowSection = showSection;
+showSection = function(s) {
+  if (s === 'files') { currentView='files'; currentChapter=null; updateNav(); renderContent(); closeSidebar(); return; }
+  _baseShowSection(s);
+};
+
+// ── Patch renderNafes to show uploaded nafes files ──
+var _baseRenderNafes = renderNafes;
+renderNafes = function(el) {
+  _baseRenderNafes(el);
+  var nf = uploadedFiles.filter(function(f){ return f.lesson === 'nafes'; });
+  if (nf.length > 0 || isAdmin) {
+    var x = '<div style="margin-top:2rem;"><h3 style="font-weight:700;color:var(--accent-cyan);margin-bottom:1rem;">📥 اختبارات نافس من المعلمة</h3>';
+    if (isAdmin) {
+      x += '<div style="margin-bottom:1rem;display:flex;gap:0.5rem;flex-wrap:wrap;">' +
+        '<button onclick="uploadNafesFile()" class="cms-btn cms-attach" style="padding:0.7rem 1.2rem">📝 رفع اختبار نافس</button>' +
+        '<button onclick="addNafesLink()" class="cms-btn cms-link" style="padding:0.7rem 1.2rem">🔗 رابط اختبار</button></div>';
+    }
+    if (nf.length === 0) { x += '<p style="color:var(--text-muted);font-size:0.9rem;">لا توجد اختبارات مرفوعة بعد.</p>'; }
+    else {
+      x += '<div class="nafes-grid">';
+      nf.forEach(function(f) {
+        x += '<div class="nafes-card">';
+        if (f.isLink) {
+          x += '<div class="card-icon" style="background:rgba(34,211,238,0.12);color:#22d3ee">🔗</div><h3>' + f.name + '</h3><p>' + f.date + '</p>' +
+            '<div style="margin-top:0.5rem"><a href="' + f.url + '" target="_blank" class="file-btn file-view" style="text-decoration:none;padding:0.4rem 1rem;">فتح الرابط ↗</a>';
+        } else {
+          x += '<div class="card-icon" style="background:rgba(239,68,68,0.12);color:#ef4444">📄</div><h3>' + f.name + '</h3><p>' + f.date + ' • ' + Math.round((f.size||0)/1024) + ' KB</p>' +
+            '<div style="margin-top:0.5rem"><button onclick="openFile(\'' + f.id + '\')" class="file-btn file-view" style="padding:0.4rem 1rem;">عرض</button> ' +
+            '<button onclick="downloadFile(\'' + f.id + '\')" class="file-btn file-dl" style="padding:0.4rem 1rem;">⬇ تحميل</button>';
+        }
+        if (isAdmin) x += ' <button onclick="removeFile(\'' + f.id + '\')" class="file-btn file-del" style="padding:0.4rem 1rem;">حذف</button>';
+        x += '</div></div>';
+      });
+      x += '</div>';
+    }
+    x += '</div>';
+    var fi = el.querySelector('.fade-in');
+    if (fi) fi.insertAdjacentHTML('beforeend', x);
+  }
+};
+
+// ═══ ADMIN ═══
+function showLoginModal() {
+  var d=document.createElement('div');d.id='cmsModal';d.className='cms-overlay';
+  d.innerHTML='<div class="cms-dialog"><h3 class="cms-title">🔐 دخول المعلمة</h3><input type="password" id="cmsPass" placeholder="كلمة المرور" class="cms-input" onkeydown="if(event.key===\'Enter\')doLogin()"/><button onclick="doLogin()" class="cms-primary-btn">تسجيل الدخول</button><button onclick="closeCms()" class="cms-secondary-btn">إلغاء</button></div>';
+  document.body.appendChild(d);setTimeout(function(){var p=document.getElementById('cmsPass');if(p)p.focus();},100);
+}
+function doLogin(){var p=document.getElementById('cmsPass');if(p&&p.value===ADMIN_PASS){isAdmin=true;var l=document.getElementById('adminLabel');if(l)l.textContent='تسجيل خروج 🚪';closeCms();toast('مرحبًا أ. عواطف! ✅');renderContent();}else{toast('كلمة المرور غير صحيحة ❌');}}
+function toggleAdminLogin(){if(isAdmin){isAdmin=false;var l=document.getElementById('adminLabel');if(l)l.textContent='دخول المعلمة 🔐';toast('تم تسجيل الخروج');renderContent();}else{showLoginModal();}}
+function closeCms(){var m=document.getElementById('cmsModal');if(m)m.remove();}
+function toast(msg){var t=document.createElement('div');t.className='cms-toast';t.textContent=msg;document.body.appendChild(t);setTimeout(function(){t.remove();},2500);}
+
+// ═══ EDITING ═══
+function editContent(ci,li,style){
+  var cur=getExp(ci,li,style);
+  var d=document.createElement('div');d.id='cmsModal';d.className='cms-overlay';
+  d.innerHTML='<div class="cms-dialog cms-wide"><h3 class="cms-title">✏️ تعديل المحتوى</h3>'+
+    '<p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">'+chapters[ci].name+' ← '+chapters[ci].lessons[li]+'</p>'+
+    '<p style="font-size:0.72rem;color:var(--accent-gold);margin-bottom:0.8rem;">HTML مدعوم: &lt;strong&gt; | &lt;span class="math-formula"&gt; | &lt;div class="example-box"&gt; | &lt;div class="tip-box"&gt;</p>'+
+    '<textarea id="cmsEditor" class="cms-textarea">'+escH(cur)+'</textarea>'+
+    '<div class="cms-btn-row"><button onclick="saveContent('+ci+','+li+','+style+')" class="cms-primary-btn" style="flex:1">💾 حفظ</button>'+
+    '<button onclick="resetContent('+ci+','+li+','+style+')" class="cms-danger-btn">↩️ استعادة الأصلي</button>'+
+    '<button onclick="closeCms()" class="cms-secondary-btn" style="width:auto;padding:0.6rem 1.5rem">إلغاء</button></div></div>';
+  document.body.appendChild(d);
+}
+function escH(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function saveContent(ci,li,style){var t=document.getElementById('cmsEditor');if(!t)return;try{localStorage.setItem('custom_'+ci+'_'+li+'_'+style,t.value);}catch(e){}closeCms();toast('تم حفظ التعديل ✅');renderContent();}
+function resetContent(ci,li,style){try{localStorage.removeItem('custom_'+ci+'_'+li+'_'+style);}catch(e){}closeCms();toast('تم استعادة الأصلي ↩️');renderContent();}
+
+// ═══ FILES ═══
+function saveFiles(){try{localStorage.setItem('math_files',JSON.stringify(uploadedFiles));}catch(e){toast('⚠️ المساحة ممتلئة');}}
+function attachFileToLesson(ci,li){_doUpload(ci+'-'+li);}
+function uploadNafesFile(){_doUpload('nafes');}
+function uploadGeneralFile(){_doUpload('general');}
+function _doUpload(key){
+  var inp=document.createElement('input');inp.type='file';inp.accept='.pdf,.png,.jpg,.jpeg,.doc,.docx';
+  inp.onchange=function(e){var file=e.target.files[0];if(!file)return;
+    if(file.size>5242880){toast('⚠️ الملف أكبر من 5 ميجا');return;}
+    toast('جاري الرفع... ⏳');
+    var r=new FileReader();r.onload=function(ev){
+      uploadedFiles.push({id:'f'+Date.now(),name:file.name,type:file.type||'',size:file.size,data:ev.target.result,lesson:key,date:new Date().toLocaleDateString('ar-SA'),isLink:false});
+      saveFiles();toast('✅ تم رفع "'+file.name+'"');renderContent();
+    };r.readAsDataURL(file);};inp.click();
+}
+function addLinkToLesson(ci,li){_doLink(ci+'-'+li);}
+function addNafesLink(){_doLink('nafes');}
+function addGeneralLink(){_doLink('general');}
+function _doLink(key){
+  var d=document.createElement('div');d.id='cmsModal';d.className='cms-overlay';
+  d.innerHTML='<div class="cms-dialog"><h3 class="cms-title">🔗 إضافة رابط</h3>'+
+    '<input type="text" id="linkName" placeholder="اسم الملف" class="cms-input" style="text-align:right;font-size:0.9rem;margin-bottom:0.5rem"/>'+
+    '<input type="url" id="linkUrl" placeholder="https://..." class="cms-input" style="text-align:left;direction:ltr;font-size:0.9rem"/>'+
+    '<button onclick="saveLink(\''+key+'\')" class="cms-primary-btn">💾 حفظ</button>'+
+    '<button onclick="closeCms()" class="cms-secondary-btn">إلغاء</button></div>';
+  document.body.appendChild(d);
+}
+function saveLink(key){var n=document.getElementById('linkName').value.trim();var u=document.getElementById('linkUrl').value.trim();
+  if(!n||!u){toast('أدخلي الاسم والرابط');return;}
+  uploadedFiles.push({id:'f'+Date.now(),name:n,url:u,lesson:key,date:new Date().toLocaleDateString('ar-SA'),isLink:true});
+  saveFiles();closeCms();toast('✅ تم حفظ الرابط');renderContent();}
+function openFile(fid){var f=uploadedFiles.find(function(x){return x.id===fid;});if(!f)return;
+  if(f.isLink){window.open(f.url,'_blank');return;}
+  var w=window.open('','_blank');if(!w){toast('فعّلي النوافذ المنبثقة');return;}
+  if(f.type.indexOf('pdf')>-1){w.document.write('<html><head><title>'+f.name+'</title></head><body style="margin:0"><embed src="'+f.data+'" type="application/pdf" width="100%" height="100%" style="position:absolute;inset:0"/></body></html>');}
+  else{w.document.write('<html><head><title>'+f.name+'</title></head><body style="margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh"><img src="'+f.data+'" style="max-width:100%;max-height:100vh"/></body></html>');}}
+function downloadFile(fid){var f=uploadedFiles.find(function(x){return x.id===fid;});if(!f||!f.data)return;var a=document.createElement('a');a.href=f.data;a.download=f.name;a.click();}
+function removeFile(fid){if(!confirm('حذف هذا الملف؟'))return;uploadedFiles=uploadedFiles.filter(function(x){return x.id!==fid;});saveFiles();toast('تم الحذف 🗑️');renderContent();}
+
+// ═══ FILES PAGE ═══
+function renderFilesPage(el){
+  var nf=uploadedFiles.filter(function(f){return f.lesson==='nafes';});
+  var gf=uploadedFiles.filter(function(f){return f.lesson==='general';});
+  var lf=uploadedFiles.filter(function(f){return f.lesson!=='nafes'&&f.lesson!=='general';});
+  var h='<div class="fade-in"><div class="section-header"><h2>📁 ملفات ومرفقات</h2><button class="back-btn" onclick="showSection(\'home\')">→ الرجوع</button></div>';
+  if(isAdmin){h+='<div class="cms-actions" style="margin-bottom:1.5rem"><button onclick="uploadNafesFile()" class="cms-btn cms-attach" style="padding:0.7rem 1.2rem">📝 رفع اختبار نافس</button><button onclick="addNafesLink()" class="cms-btn cms-link" style="padding:0.7rem 1.2rem">🔗 رابط اختبار</button><button onclick="uploadGeneralFile()" class="cms-btn cms-edit" style="padding:0.7rem 1.2rem">📤 رفع ملف عام</button><button onclick="addGeneralLink()" class="cms-btn cms-link" style="padding:0.7rem 1.2rem">🔗 رابط عام</button></div>';}
+  h+='<h3 style="font-weight:700;color:var(--accent-cyan);margin-bottom:1rem">📝 اختبارات نافس</h3>';
+  if(nf.length===0){h+='<p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:2rem">لا توجد اختبارات بعد.</p>';}
+  else{h+='<div class="nafes-grid" style="margin-bottom:2rem">';nf.forEach(function(f){h+='<div class="nafes-card">';if(f.isLink){h+='<div class="card-icon" style="background:rgba(34,211,238,0.12);color:#22d3ee">🔗</div><h3>'+f.name+'</h3><p>'+f.date+'</p><div style="margin-top:0.5rem"><a href="'+f.url+'" target="_blank" class="file-btn file-view" style="text-decoration:none;padding:0.4rem 1rem">فتح ↗</a>';}else{h+='<div class="card-icon" style="background:rgba(239,68,68,0.12);color:#ef4444">📄</div><h3>'+f.name+'</h3><p>'+f.date+' • '+Math.round((f.size||0)/1024)+' KB</p><div style="margin-top:0.5rem"><button onclick="openFile(\''+f.id+'\')" class="file-btn file-view" style="padding:0.4rem 1rem">عرض</button> <button onclick="downloadFile(\''+f.id+'\')" class="file-btn file-dl" style="padding:0.4rem 1rem">⬇ تحميل</button>';}if(isAdmin)h+=' <button onclick="removeFile(\''+f.id+'\')" class="file-btn file-del" style="padding:0.4rem 1rem">حذف</button>';h+='</div></div>';});h+='</div>';}
+  h+='<h3 style="font-weight:700;color:var(--accent-3);margin-bottom:1rem">📁 ملفات عامة</h3>';
+  if(gf.length===0){h+='<p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:2rem">لا توجد ملفات.</p>';}
+  else{h+='<div class="nafes-grid" style="margin-bottom:2rem">';gf.forEach(function(f){h+='<div class="nafes-card">';if(f.isLink){h+='<div class="card-icon" style="background:rgba(99,102,241,0.12);color:var(--accent-1)">🔗</div><h3>'+f.name+'</h3><p>'+f.date+'</p><div style="margin-top:0.5rem"><a href="'+f.url+'" target="_blank" class="file-btn file-view" style="text-decoration:none;padding:0.4rem 1rem">فتح ↗</a>';}else{h+='<div class="card-icon" style="background:rgba(99,102,241,0.12);color:var(--accent-1)">'+(f.type&&f.type.indexOf('pdf')>-1?'📄':'🖼️')+'</div><h3>'+f.name+'</h3><p>'+f.date+' • '+Math.round((f.size||0)/1024)+' KB</p><div style="margin-top:0.5rem"><button onclick="openFile(\''+f.id+'\')" class="file-btn file-view" style="padding:0.4rem 1rem">عرض</button> <button onclick="downloadFile(\''+f.id+'\')" class="file-btn file-dl" style="padding:0.4rem 1rem">⬇ تحميل</button>';}if(isAdmin)h+=' <button onclick="removeFile(\''+f.id+'\')" class="file-btn file-del" style="padding:0.4rem 1rem">حذف</button>';h+='</div></div>';});h+='</div>';}
+  if(lf.length>0){h+='<h3 style="font-weight:700;color:var(--accent-emerald);margin-bottom:1rem">📎 ملفات الدروس</h3><div class="nafes-grid">';lf.forEach(function(f){var p=f.lesson.split('-');var cn=chapters[+p[0]]?chapters[+p[0]].name:'';var ln=chapters[+p[0]]&&chapters[+p[0]].lessons[+p[1]]?chapters[+p[0]].lessons[+p[1]]:'';h+='<div class="nafes-card"><div class="card-icon" style="background:rgba(52,211,153,0.12);color:#34d399">'+(f.isLink?'🔗':'📄')+'</div><h3>'+f.name+'</h3><p style="color:var(--accent-emerald);font-size:0.75rem">'+cn+' ← '+ln+'</p><p>'+f.date+'</p><div style="margin-top:0.5rem">';if(f.isLink){h+='<a href="'+f.url+'" target="_blank" class="file-btn file-view" style="text-decoration:none;padding:0.4rem 1rem">فتح ↗</a>';}else{h+='<button onclick="openFile(\''+f.id+'\')" class="file-btn file-view" style="padding:0.4rem 1rem">عرض</button> <button onclick="downloadFile(\''+f.id+'\')" class="file-btn file-dl" style="padding:0.4rem 1rem">⬇ تحميل</button>';}if(isAdmin)h+=' <button onclick="removeFile(\''+f.id+'\')" class="file-btn file-del" style="padding:0.4rem 1rem">حذف</button>';h+='</div></div>';});h+='</div>';}
+  h+='<div style="margin-top:2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.2rem"><p style="font-size:0.8rem;color:var(--text-muted)">💡 الملفات المرفوعة تُحفظ في المتصفح. لمشاركتها مع الطالبات استخدمي <strong>روابط Google Drive</strong>.</p></div></div>';
+  el.innerHTML=h;
+}
+
+// ═══ INIT ═══
+(function(){
+  var sb=document.getElementById('sidebar');if(!sb)return;
+  var sec=document.createElement('div');
+  sec.innerHTML='<div class="nav-divider"></div><div class="sidebar-section"><div class="sidebar-title">أدوات</div><div class="nav-item" onclick="showSection(\'files\')"><span class="icon">📁</span> ملفات ومرفقات</div><div class="nav-item" onclick="toggleAdminLogin()"><span class="icon">🔐</span> <span id="adminLabel">دخول المعلمة 🔐</span></div></div>';
+  sb.appendChild(sec);
+  var s=document.createElement('style');
+  s.textContent='.cms-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem}.cms-dialog{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;width:100%;max-width:400px}.cms-wide{max-width:800px;max-height:90vh;overflow-y:auto}.cms-title{text-align:center;font-size:1.1rem;font-weight:800;margin-bottom:1rem}.cms-input{width:100%;background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:.8rem;text-align:center;font-size:1rem;color:var(--text-primary);font-family:Tajawal;margin-bottom:.8rem;outline:none}.cms-input:focus{border-color:var(--accent-1)}.cms-textarea{width:100%;min-height:250px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:1rem;color:var(--text-primary);font-size:.85rem;font-family:monospace;direction:rtl;resize:vertical;line-height:1.8;outline:none}.cms-textarea:focus{border-color:var(--accent-1)}.cms-primary-btn{width:100%;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#fff;border:none;padding:.8rem;border-radius:12px;font-family:Tajawal;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:.4rem}.cms-primary-btn:hover{opacity:.9}.cms-secondary-btn{width:100%;background:transparent;border:1px solid var(--border);color:var(--text-muted);padding:.6rem;border-radius:12px;font-family:Tajawal;cursor:pointer}.cms-danger-btn{padding:.6rem 1.2rem;background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.3);border-radius:12px;font-family:Tajawal;cursor:pointer}.cms-btn{font-size:.8rem;padding:.5rem 1rem;border-radius:10px;cursor:pointer;font-family:Tajawal;font-weight:600;border:1px solid;transition:.2s;display:inline-block}.cms-edit{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.3);color:#fbbf24}.cms-attach{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.3);color:#34d399}.cms-link{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.3);color:#22d3ee}.cms-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.2rem}.cms-btn-row{display:flex;gap:.5rem;margin-top:.8rem;flex-wrap:wrap}.cms-toast{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#fff;padding:.7rem 1.5rem;border-radius:12px;font-size:.9rem;font-weight:700;box-shadow:0 10px 40px rgba(0,0,0,.4);font-family:Tajawal;animation:fadeIn .3s}.lesson-files{margin-top:1rem;border-top:1px solid var(--border);padding-top:1rem}.lesson-files-title{font-weight:700;color:var(--accent-cyan);font-size:.9rem;margin-bottom:.5rem}.file-card{display:flex;align-items:center;gap:.5rem;background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.12);border-radius:10px;padding:.6rem .8rem;margin-bottom:.4rem;flex-wrap:wrap}.file-card-icon{font-size:1.3rem;flex-shrink:0}.file-card-info{flex:1;min-width:100px}.file-card-name{display:block;font-size:.85rem;font-weight:600}.file-card-meta{display:block;font-size:.7rem;color:var(--text-muted)}.file-btn{font-size:.72rem;padding:.25rem .7rem;border-radius:8px;cursor:pointer;font-family:Tajawal;border:1px solid;display:inline-block;font-weight:600;background:transparent}.file-view{color:var(--accent-3);border-color:rgba(99,102,241,.3)}.file-dl{color:#34d399;border-color:rgba(52,211,153,.3)}.file-del{color:#ef4444;border-color:rgba(239,68,68,.25)}';
+  document.head.appendChild(s);
+})();
+
+// ═══ VISITOR COUNTER (REAL) ═══
+// Uses CountAPI-compatible free service for real cross-device counting
+var visitorCount = 0;
+
+function updateVisitorDisplay(){
+  var el = document.getElementById('totalVisits');
+  if(el) el.textContent = visitorCount > 0 ? visitorCount.toLocaleString('ar-SA') : '...';
+}
+
+// Fetch and increment real counter via free API
+(function initRealCounter(){
+  // Use a namespace unique to this site
+  var ns = 'math-platform64-vercel';
+  var key = 'visits';
+  
+  // Try primary API
+  fetch('https://api.countapi.xyz/hit/' + ns + '/' + key)
+    .then(function(r){ return r.json(); })
+    .then(function(data){ 
+      if(data && data.value){ visitorCount = data.value; updateVisitorDisplay(); }
+    })
+    .catch(function(){
+      // Fallback: use localStorage count but mark it as local
+      try {
+        var lc = parseInt(localStorage.getItem('math_visit_count') || '0') + 1;
+        localStorage.setItem('math_visit_count', lc.toString());
+        visitorCount = lc;
+        updateVisitorDisplay();
+      } catch(e){}
+    });
+})();
+
+(function addVisitorCSS(){
+  var s = document.createElement('style');
+  s.textContent = '.visitor-stats-bar{display:flex;justify-content:center;align-items:center;gap:0.4rem;margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(99,102,241,0.08)}.vs-item{display:flex;align-items:center;gap:0.3rem;font-size:0.75rem;color:var(--text-muted)}.vs-num{font-weight:700;color:var(--accent-3);font-size:0.8rem}';
+  document.head.appendChild(s);
+})();
+
+renderContent();
 </script>
 </body>
 </html>
