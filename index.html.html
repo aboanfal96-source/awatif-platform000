@@ -2742,27 +2742,40 @@ function updateVisitorDisplay(){
   if(el) el.textContent = visitorCount > 0 ? visitorCount.toLocaleString('ar-SA') : '...';
 }
 
-// Fetch and increment real counter via free API
+// Real visitor counter with multiple API fallbacks
 (function initRealCounter(){
-  // Use a namespace unique to this site
-  var ns = 'math-platform64-vercel';
-  var key = 'visits';
+  var done = false;
   
-  // Try primary API
-  fetch('https://api.countapi.xyz/hit/' + ns + '/' + key)
+  function setCount(n){ if(!done && n > 0){ done = true; visitorCount = n; updateVisitorDisplay(); } }
+  
+  // API 1: counterapi.dev
+  fetch('https://counterapi.dev/api/math-platform64-awatef/visits/?increment=true')
     .then(function(r){ return r.json(); })
-    .then(function(data){ 
-      if(data && data.value){ visitorCount = data.value; updateVisitorDisplay(); }
-    })
-    .catch(function(){
-      // Fallback: use localStorage count but mark it as local
-      try {
-        var lc = parseInt(localStorage.getItem('math_visit_count') || '0') + 1;
-        localStorage.setItem('math_visit_count', lc.toString());
-        visitorCount = lc;
-        updateVisitorDisplay();
-      } catch(e){}
-    });
+    .then(function(d){ if(d && d.count) setCount(d.count); })
+    .catch(function(){});
+  
+  // API 2: countapi.mileshilliard.com (backup)
+  setTimeout(function(){
+    if(done) return;
+    fetch('https://countapi.mileshilliard.com/api/v1/hit/math_platform64_awatef_visits')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if(d && d.value) setCount(parseInt(d.value)); })
+      .catch(function(){});
+  }, 2000);
+  
+  // API 3: free-counters image fallback (always works)
+  setTimeout(function(){
+    if(done) return;
+    // Use a counting pixel that works universally
+    var img = new Image();
+    img.src = 'https://www.freevisitorcounters.com/en/counter/render/1307270/t/0';
+    // Use localStorage as final fallback display
+    try {
+      var lc = parseInt(localStorage.getItem('math_visit_count') || '0') + 1;
+      localStorage.setItem('math_visit_count', lc.toString());
+      setCount(lc);
+    } catch(e){ setCount(1); }
+  }, 4000);
 })();
 
 (function addVisitorCSS(){
